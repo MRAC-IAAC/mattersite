@@ -7,7 +7,7 @@ This repo contains a set of tools from the research stage of the Mattersite proj
 
 Pre-Demolition Analysis
 -----------------------
-
+![](doc/predemo.png)
 ### Components
 Predemolition Analysis covers two main stages; 2d material localization for captured images, and 3d site reconstruction and assocation with localized material maps.
 
@@ -89,6 +89,7 @@ The site_reconstruction grasshopper file includes functionality to upload extrac
 
 Post-Demolition Design Demonstrator
 -----------------------------------
+![](doc/design.png)
 ### Components
 The demonstrator is split into two parts, adaptive design and resulting fabrication, using the 'Design for Fabrication + Database' and 'mattersite_demonstrator_fabrication' componenents respectively.  
 The Design script create semi-reciprocal structures based on simple parametric input surfaces, using a two-layer approach. The input form and specifics are adapted based on material availability from an associated database. 
@@ -130,7 +131,10 @@ The Design for Fabrication grasshopper file includes functionality to read avail
 - Database Password
 - Database Schema Name
 
+---
+
 Database Setup
 --------------
+![](doc/database.png)
 The MySQL schema is located in the database folder. The system was tested running on Amazon RDS, using MySQL workbench for editing.  
 To import the schema, create a new blank schema, then select File -> Run SQL Script and select the mattersite_schema.sql document. 

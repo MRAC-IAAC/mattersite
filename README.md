@@ -16,7 +16,15 @@ Predemolition Analysis covers two main stages; 2d material localization for capt
 This system was tested under Ubuntu 18.04, with Python 3.8, primarily using OpenCV 4.2 and Numpy 1.18  
 Full python environment is listed in requirements.txt  
 Some util scripts also require Processing 3.
-#### Geometric Reconstruction
+#### Geometric Reconstruction : Grasshopper Plugins
+- Volvox : Point cloud processing
+- Slingshot : MySQL connections
+- Human : Interface
+- Pufferfish : Geometry utilities
+- Firefly : Batch processing
+- Heteroptera : Batch Processing
+- Owl : Bulk data processing
+- Telepathy : Interface
 
 
 ### Usage
@@ -27,7 +35,7 @@ To process the input images and train the classifier, run
 
 `./setup_model`
 
-The script will look for input images in the path data/s2g1_dataset/images, organized in directories by category name.
+The script will look for input images in the training_dataset directory, organized in directories by category name.
 
 This may take ~30 minutes to run, mostly due to sampling the database during the feature clustering step.
 
@@ -39,6 +47,9 @@ This will produce several files in the 'model/' folder:
 - **vocab.cpickle** : Association of visual words with categories
 - **model.cpickle** : Classification model trained from above results
 - **idf.cpickle** : Inverse Document Frequency information, contains weighting information for the importance of different features. 
+- **model_lbp** : Model trained for Local Binary Pattern analysis
+- **model_hs** : Model trained on Hue/Saturation Histograms
+- **model_stack** : Stack model combining other models in the system. 
 
 ##### Localization
 
@@ -46,13 +57,12 @@ To perform material localization, run
 
 `./localize`
  
-Ensure the '--images' argument in the call to localize.py is properly set for the folder of images to process. 
+The first argument to the script is the project directory to analyze in the 'pipeline' directory. 
 
 The time to process each image depends on the kernel_size and thus patch_size variables in the localization script. Each classification window at minimum 100 pixels, so the patch size is determined by dividing 100 by the kernel size. (e.g. the default kernel_size is 4, which leads to a final resolution of classification patches 25px on a side)
 
-This will write images with category colors overlayed to the 'output/localization' folder, as well as text files containing the heuristically weighted category scores for each image subpatch. 
+This will write images with category colors overlayed to the localization_overlay directory of the associated pipeline directory. 
 
-Not these are currently not re-normalized, and will often be negative, due to the way heuristics are applied.
 #### Geometric Reconstruction
 ### Database Access
 The site_reconstruction grasshopper file includes functionality to upload extracted data to a MySQL database. To authenticate, it looks for a file in the same directory called 'connection.txt'. This file should follow the following format:  

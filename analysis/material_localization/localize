@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate material_localization
+
+#python src/localize.py --images data/test/iaac_side_0/images --codebook model/vocab.cpickle -t True
+#python src/localize.py --images data/test/cloud_render_iaac_photogrammetry/images --codebook model/vocab.cpickle
+python src/localize.py --images pipeline/crue_de_molers_10_anna/images --codebook model/vocab.cpickle

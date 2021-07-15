@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+dataset_path="training_data/training_dataset_plus_anno/"
+
+start=`date +%s`
+sampling_percentage=0.25
+cluster_count=900
+
+echo ""
+echo "ENSURE ENV ACTIVATION"
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate material_localization
+
+echo ""
+echo "INDEX FEATURES"
+python src/index_features.py --dataset $dataset_path --features-db model/features.hdf5 --approx-images 1000 --feature-detector GFTT --extractor BRISK
+
+echo ""
+echo "CLUSTER FEATURES"
+python src/cluster_features.py --features-db model/features.hdf5 --codebook model/vocab.cpickle --clusters $cluster_count --percentage $sampling_percentage
+
+echo ""
+echo "EXTRACT BOVW"
+python src/extract_bovw.py --features-db model/features.hdf5 --codebook model/vocab.cpickle --bovw-db model/bovw.hdf5
+
+echo ""
+echo "TRAIN BOVW MODEL"
+python src/train_model.py --dataset $dataset_path --features-db model/features.hdf5 --bovw-db model/bovw.hdf5 --model model/model.cpickle 
+
+echo ""
+echo "TRAIN LBP MODEL"
+python src/train_lbp_model.py --dataset $dataset_path
+
+echo ""
+echo "TRAIN HS MODEL"
+python src/train_hs_model.py --dataset $dataset_path
+
+echo ""
+echo "TRAIN STACK MODEL"
+python src/train_stack.py --dataset $dataset_path --codebook model/vocab.cpickle --model model/model_stack.cpickle --start_time $start --cluster_count $cluster_count --sampling_percentage $sampling_percentage
+
+end=`date +%s`
+runtime=$((end-start))
+
+echo "Setup took $runtime seconds"

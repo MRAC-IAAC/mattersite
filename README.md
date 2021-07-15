@@ -56,6 +56,12 @@ This will produce several files in the 'model/' folder:
 
 ##### Localization
 
+Localized sites should each have their own directory in a 'pipeline' folder. Each site directory should follow this structure : 
+- images : Raw site photography to be localized
+- localization_input : Manually annotated ground truth, if this site will be used to test accuracy
+- localization_output : Colorized localization maps will be exported here
+- localization_output_overlay : The colorized localization maps overlaid on the input imagery, to visually assess accuracy
+
 To perform material localization, run 
 
 `./localize`
@@ -64,7 +70,7 @@ The first argument to the script is the project directory to analyze in the 'pip
 
 The time to process each image depends on the kernel_size and thus patch_size variables in the localization script. Each classification window at minimum 100 pixels, so the patch size is determined by dividing 100 by the kernel size. (e.g. the default kernel_size is 4, which leads to a final resolution of classification patches 25px on a side)
 
-This will write images with category colors overlayed to the localization_overlay directory of the associated pipeline directory. 
+This will write images with category colors overlayed to the localization_output directory of the associated pipeline directory. 
 
 #### Geometric Reconstruction
 Starting with a raw point cloud of the site, load the cloud into Cloud Compare. Run the RANSAC utility, looking for planes and cylinders. Once finished, select all found subclouds and export in xyz format. 
@@ -73,7 +79,7 @@ In the site_reconstruction script, select these filepaths in the 'Load Plane Clo
 #### Integration
 When using agisoft metashape, calculated cameras can be exported as matrix values to a text file. Once exported, set the path of this file to the 'Current Extrinsic' path in the Camera Input group, and select each of the images to be projected in the Current Image path. 
 
-Before raytracing, create the object index images for the scene. Frist, click Bake Geometry in the Render Mapped Mask group, which will allow the elements to be drawn without edges. Using the index slider in the Camera Input group, select each index, then click the Run button in the Saved Mapped Image group. This will export a black and white image corresponding to the id of element in the scene, to speed up raycasting. 
+Before raytracing, create the object index images for the scene. First, click Bake Geometry in the Render Mapped Mask group, which will allow the elements to be drawn without edges. Using the index slider in the Camera Input group, select each index, then click the Run button in the Saved Mapped Image group. This will export a black and white image corresponding to the id of element in the scene, to speed up raycasting. 
 
 Then cycle through each image again, using the Raycast button in the Raycast control group. Each pass casts 20000 points into the scene. Alternatively, use the timer object to process the whole image in one pass. The final texture clouds will be recorded in the Construct UV clouds group. From here they can exported for rendering in Cloud Compare. 
 
@@ -136,5 +142,13 @@ The Design for Fabrication grasshopper file includes functionality to read avail
 Database Setup
 --------------
 ![](doc/database.png)
+Project data is stored in a MySQL database, based on explicitly defined tables and accessed using relational queries.   
+The primary tables used are 'site_elements' which stores data captured in predemolition sites, and 'elements' which keeps track of extracted materials after they've been deconstructed. Other tables inclue: 
+- sites : Stores location information about each site as its scanned, and is used as a source reference for recovered materials
+- element_defects : Stores structural information about nail holes and knots in recovered materials
+- element_photo_textures : Stores binary data about extracted surface textures
+- wood_data : Stores structural information about common species to reference from individual elements
+
+
 The MySQL schema is located in the database folder. The system was tested running on Amazon RDS, using MySQL workbench for editing.  
 To import the schema, create a new blank schema, then select File -> Run SQL Script and select the mattersite_schema.sql document. 

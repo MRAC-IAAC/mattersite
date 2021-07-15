@@ -42,8 +42,8 @@ The Fabrication script creates CAM files for these designs using a Kuka industri
 - Telepathy : Interface
 
 #### Fabrication : Grasshopper Plugins
-KukaPRC : Kuka Programming
-Telepathy : Interface
+- KukaPRC : Kuka Programming
+- Telepathy : Interface
 
 ### Usage
 #### Design

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# First run script to get environment set up on a new training machine
+# Assume that the repo is downloaded (obviously) and that conda is already installed. 
+
+sudo apt install emacs tmux htop net-tools
+
+conda config --add channel conda-forge
+conda config --set channel_priority strict
+
+conda create --name material_localization --file requirements.txt
+conda activate material_localization
+
+pip install imutils
+pip install progressbar

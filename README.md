@@ -1,7 +1,7 @@
 Mattersite
 ==========
 
-This repo contains a set of tools from the research stage of the Mattersite project. This technology primarily covers two phases, predemolition analysis, and post-demolition design with recovered materials. 
+This repo contains a set of tools from the research stage of the Mattersite project. For an overview of the project's goals and development, please see our [blogpost](http://www.iaacblog.com/programs/matter-site-2/). This technology primarily covers two phases, predemolition analysis, and post-demolition design with recovered materials. 
 
 ---
 
